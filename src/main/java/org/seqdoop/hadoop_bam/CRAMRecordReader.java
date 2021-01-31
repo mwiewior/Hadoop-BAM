@@ -52,7 +52,7 @@ public class CRAMRecordReader extends RecordReader<LongWritable, SAMRecordWritab
     // also subtract one from end since CRAMIterator's boundaries are inclusive
     long[] boundaries = new long[] {start << 16, (end - 1) << 16};
     ValidationStringency stringency = SAMHeaderReader.getValidationStringency(conf);
-    cramIterator = new CRAMIterator(seekableStream, refSource, boundaries, stringency);
+    cramIterator = new CRAMIterator(seekableStream, refSource,stringency);
   }
 
   @Override

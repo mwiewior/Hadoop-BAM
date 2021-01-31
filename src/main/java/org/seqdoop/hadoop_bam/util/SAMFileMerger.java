@@ -95,7 +95,7 @@ public class SAMFileMerger {
   //Terminate the aggregated output stream with an appropriate SAMOutputFormat-dependent terminator block
   private static void writeTerminatorBlock(final OutputStream out, final SAMFormat samOutputFormat) throws IOException {
     if (SAMFormat.CRAM == samOutputFormat) {
-      CramIO.issueEOF(CramVersions.DEFAULT_CRAM_VERSION, out); // terminate with CRAM EOF container
+      CramIO.writeCramEOF(CramVersions.DEFAULT_CRAM_VERSION, out); // terminate with CRAM EOF container
     } else if (SAMFormat.BAM == samOutputFormat) {
       out.write(BlockCompressedStreamConstants.EMPTY_GZIP_BLOCK); // add the BGZF terminator
     }
