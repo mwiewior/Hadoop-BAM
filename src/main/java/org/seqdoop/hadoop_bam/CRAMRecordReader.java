@@ -1,13 +1,14 @@
 package org.seqdoop.hadoop_bam;
 
-import htsjdk.samtools.CRAMIterator;
-import htsjdk.samtools.SAMRecord;
-import htsjdk.samtools.ValidationStringency;
+import htsjdk.samtools.*;
 import htsjdk.samtools.cram.ref.ReferenceSource;
 import htsjdk.samtools.seekablestream.SeekableStream;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Paths;
+import java.util.List;
+
+import htsjdk.samtools.util.Interval;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
@@ -51,8 +52,12 @@ public class CRAMRecordReader extends RecordReader<LongWritable, SAMRecordWritab
     // CRAMIterator right shifts boundaries by 16 so we do the reverse here
     // also subtract one from end since CRAMIterator's boundaries are inclusive
     long[] boundaries = new long[] {start << 16, (end - 1) << 16};
+    List<Interval> intervals = BAMInputFormat.getIntervals(conf);
+    SAMFileHeader header = SAMHeaderReader.readSAMHeaderFrom(file, conf);
+    QueryInterval[] queryIntervals = BAMInputFormat.prepareQueryIntervals(intervals, header.getSequenceDictionary());
+
     ValidationStringency stringency = SAMHeaderReader.getValidationStringency(conf);
-    cramIterator = new CRAMIterator(seekableStream, refSource,stringency);
+    cramIterator = new CRAMIterator(seekableStream, refSource,stringency,queryIntervals,boundaries);
   }
 
   @Override
