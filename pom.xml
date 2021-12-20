@@ -39,10 +39,11 @@
     <url>http://sourceforge.net/projects/hadoop-bam/</url>
 
     <properties>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <java.version>1.8</java.version>
-        <htsjdk.version>2.22.0</htsjdk.version>
+        <htsjdk.version>2.24.1</htsjdk.version>
         <!-- CHANGE THIS FOR A DIFFERENT VERSION OF HADOOP -->
-        <hadoop.version>2.9.0</hadoop.version>
+        <hadoop.version>3.1.2</hadoop.version>
         <!--
         Below you'll find some example hadoop.version tags.  The value you set
         must have a corresponding version in one of the repositories that are
@@ -167,8 +168,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.7.0</version>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <source>8</source>
+                    <target>8</target>
                     <compilerArgs>
                         <arg>-proc:none</arg> <!-- disable cofoja for Variant -->
                         <arg>-Xlint:deprecation</arg>
