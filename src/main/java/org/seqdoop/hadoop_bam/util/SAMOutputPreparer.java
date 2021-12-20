@@ -22,6 +22,7 @@
 
 package org.seqdoop.hadoop_bam.util;
 
+import java.io.File;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -36,6 +37,7 @@ import htsjdk.samtools.SAMSequenceRecord;
 import htsjdk.samtools.SAMTextHeaderCodec;
 import htsjdk.samtools.cram.build.CramIO;
 import htsjdk.samtools.cram.common.CramVersions;
+import htsjdk.samtools.cram.structure.CramHeader;
 import htsjdk.samtools.util.BlockCompressedOutputStream;
 
 import org.seqdoop.hadoop_bam.SAMFormat;
@@ -88,7 +90,9 @@ public class SAMOutputPreparer {
 			OutputStream out, final SAMFormat format,
 	        final SAMFileHeader header)  throws IOException
 	{
-		CramIO.writeHeader(CramVersions.DEFAULT_CRAM_VERSION, out, header, null);
+
+		CramHeader cramHeader = new CramHeader(CramVersions.DEFAULT_CRAM_VERSION, null); //FIXME: requires investigation, only fixes build !!!
+		CramIO.writeCramHeader(cramHeader, out);
 		return out;
 	}
 
@@ -101,7 +105,7 @@ public class SAMOutputPreparer {
 		final String text = sw.toString();
 
 		if (format == SAMFormat.BAM) {
-			out = new BlockCompressedOutputStream(out, null);
+                    out = new BlockCompressedOutputStream(out, (File) null);
 			out.write(BAM_MAGIC);
 			writeInt32(out, text.length());
 		}
